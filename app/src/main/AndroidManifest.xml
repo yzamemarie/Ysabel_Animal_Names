@@ -15,7 +15,7 @@
         <activity
             android:name=".ManageBlockActivity"
             android:exported="false"
-            android:parentActivityName=".AnimalNamesActivity"/>
+            android:parentActivityName=".AnimalDetailsActivity"/>
         <activity
             android:name=".AnimalDetailsActivity"
             android:exported="false"

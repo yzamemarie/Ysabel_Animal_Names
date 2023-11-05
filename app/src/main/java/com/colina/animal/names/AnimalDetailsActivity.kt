@@ -35,10 +35,11 @@ class AnimalDetailsActivity : AppCompatActivity() {
             blockedSet.addAll(shared.getStringSet("blockedAnimals", setOf())!!) //get blocked animals from shared preferences
 
             binding.blockButton.setOnClickListener {
-                blockedSet.add(animalDetails.animalName) //add animal to block list
-                shared.edit().putStringSet("blockedAnimals", blockedSet).apply() //update shared preferences
+                AnimalDetails.removeAnimal(animalDetails) //removes animal from animal list
+                blockedSet.add(animalDetails.animalName) // add animal to block list
+                shared.edit().putStringSet("blockedAnimals", blockedSet).apply() //updates shared preferences
 
-                Toast.makeText(this, "This animal has been blocked!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Animal blocked!", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, AnimalNamesActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -47,4 +48,5 @@ class AnimalDetailsActivity : AppCompatActivity() {
             Toast.makeText(this, "Error: Animal is empty", Toast.LENGTH_SHORT).show()
         }
     }
+
 }

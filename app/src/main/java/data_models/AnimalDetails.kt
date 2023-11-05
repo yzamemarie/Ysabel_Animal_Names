@@ -52,6 +52,14 @@ data class AnimalDetails(val animalName: String, val animalDesc: String) : Parce
             return animalList.toList() //converts objects into list
         }
 
+        fun addAnimal(animal: AnimalDetails) {
+            animalList.add(animal) //adds animal to list
+        }
+
+        fun removeAnimal(animal: AnimalDetails) {
+            animalList.remove(animal) //removes animal from list
+        }
+
         override fun createFromParcel(parcel: Parcel): AnimalDetails {
             return AnimalDetails(parcel)
         }

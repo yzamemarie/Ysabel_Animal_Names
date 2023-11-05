@@ -8,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.colina.animal.names.ManageBlockActivity
 import com.colina.animal.names.R
 import data_models.AnimalDetails
 
-class BlockedAnimalAdapter(private val blockedList: List<AnimalDetails>, manageBlockActivity: ManageBlockActivity) : BaseAdapter() {
+class BlockedAnimalAdapter(private val blockedList: List<AnimalDetails>, private val unblockClickListener: UnblockClickListener) : BaseAdapter() {
+
+    interface UnblockClickListener {
+        fun onUnblockClick(animal: AnimalDetails)
+    }
 
     override fun getCount(): Int = blockedList.size
 
@@ -30,19 +33,16 @@ class BlockedAnimalAdapter(private val blockedList: List<AnimalDetails>, manageB
         val unblockText = view.findViewById<TextView>(R.id.unblockLink)
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                //code unsa buhaton inig click sa link
+                unblockClickListener.onUnblockClick(blockedAnimal) //unblock animal when link is clicked
             }
         }
 
-        //sets the clickablespan to the textview's text
         val spannableString = SpannableString(unblockText.text)
         spannableString.setSpan(clickableSpan, 0, unblockText.length(), 0)
 
-        //applies the modified spannablestring to the textview
         unblockText.text = spannableString
         unblockText.movementMethod = LinkMovementMethod.getInstance()
 
         return view
-
     }
 }
