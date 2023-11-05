@@ -8,6 +8,7 @@ import adapters.BlockedAnimalAdapter
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import com.google.gson.Gson
 import data_models.AnimalDetails
 import com.colina.animal.names.databinding.ActivityAnimalDetailsBinding
 
@@ -32,14 +33,18 @@ class AnimalDetailsActivity : AppCompatActivity() {
             binding.animalDesc.text = animalDetails?.animalDesc
             shared = PreferenceManager.getDefaultSharedPreferences(this)
 
-            blockedSet.addAll(shared.getStringSet("blockedAnimals", setOf())!!) //get blocked animals from shared preferences
-
             binding.blockButton.setOnClickListener {
+                val blockedAnimalName = animalDetails.animalName //gets name of the blocked animal
                 AnimalDetails.removeAnimal(animalDetails) //removes animal from animal list
-                blockedSet.add(animalDetails.animalName) // add animal to block list
-                shared.edit().putStringSet("blockedAnimals", blockedSet).apply() //updates shared preferences
 
-                Toast.makeText(this, "Animal blocked!", Toast.LENGTH_SHORT).show()
+                val animalListJson = Gson().toJson(AnimalDetails.getAnimalList())
+                shared.edit().putString("animalList", animalListJson).commit() //update shared preferences
+
+                blockedSet.add(animalDetails.animalName) //adds animal to block list
+                shared.edit().putStringSet("blockedAnimals", blockedSet).commit()
+
+                Toast.makeText(this, "$blockedAnimalName blocked!", Toast.LENGTH_SHORT).show()
+
                 val intent = Intent(this, AnimalNamesActivity::class.java)
                 startActivity(intent)
                 finish()

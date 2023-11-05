@@ -1,6 +1,7 @@
 package com.colina.animal.names
 
 import adapters.BlockedAnimalAdapter
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -41,18 +42,28 @@ class ManageBlockActivity : AppCompatActivity(), BlockedAnimalAdapter.UnblockCli
                 return animal
             }
         }
-        return AnimalDetails("Unicorn", "Animal does not exist like the Unicorn!")
+        return null
     }
 
     override fun onUnblockClick(animal: AnimalDetails) {
-        val blockedSet = blockedListMap.map { it.animalName }.toSet()
         val shared = PreferenceManager.getDefaultSharedPreferences(this)
-        shared.edit().putStringSet("blockedAnimals", blockedSet).apply() //updates shared preferences
+        val blockedAnimals = HashSet(shared.getStringSet("blockedAnimals", emptySet()))
 
-        AnimalDetails.addAnimal(animal) //adds animal to animal list
-        blockedListMap.remove(animal) //removes from block list
-        (binding.blockedListView.adapter as BlockedAnimalAdapter).notifyDataSetChanged()
+        if (blockedAnimals.contains(animal.animalName)) {
+            blockedAnimals.remove(animal.animalName) //removes animal from blockedAnimals set
+            shared.edit().putStringSet("blockedAnimals", blockedAnimals).apply() //updates shared preferences
 
-        Toast.makeText(this, "Animal unblocked!", Toast.LENGTH_SHORT).show()
+            AnimalDetails.addAnimal(animal) //adds animal back to the animal list
+            blockedListMap.remove(animal) //removes from block list
+            (binding.blockedListView.adapter as BlockedAnimalAdapter).notifyDataSetChanged()
+
+            Toast.makeText(this, "${animal.animalName} unblocked!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, AnimalNamesActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            Toast.makeText(this, "Error: Animal not found!", Toast.LENGTH_SHORT).show()
+        }
     }
+
 }

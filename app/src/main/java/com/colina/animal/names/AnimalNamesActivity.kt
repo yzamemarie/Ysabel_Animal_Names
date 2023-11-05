@@ -17,6 +17,7 @@ class AnimalNamesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAnimalNamesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        title = "Animal names from A to Z"
 
         val adapter = AnimalAdapter(animalList)
         binding.animalListView.adapter = adapter
